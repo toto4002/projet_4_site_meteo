@@ -6,7 +6,7 @@ app = Flask(__name__,
             template_folder='.'
             )
 
-api_key = 913a3052e4518b0d4c14d67a6a54540e
+api_key = '913a3052e4518b0d4c14d67a6a54540e'
 
 
 import requests
@@ -21,18 +21,22 @@ def get_weather(city_name):
     }
     response = requests.get(base_url, params=params)
     data = response.json()
-    
+
     if response.status_code == 200:
-        weather = {
-            'temperature': data['main']['temp'],
-            'description': data['weather'][0]['description'],
-            'humidity': data['main']['humidity'],
-            'pressure': data['main']['pressure'],
-            'wind_speed': data['wind']['speed']
-        }
+        weather = [
+            data['main']['temp'],       # temperature
+            data['weather'][0]['description'],  # description
+            data['main']['humidity'],   # humidity
+            data['main']['pressure'],   # pressure
+            data['wind']['speed']       # wind_speed
+        ]
         return weather
     else:
         return None
+
+city = "Paris"
+w = get_weather(city)
+print(w)
 
 
 
@@ -44,7 +48,7 @@ def index():
 def ville():
     selected_city = request.args.get('city')
     data_json = get_weather(selected_city)
-    
+
     return jsonify(data_json)
 
 
