@@ -6,27 +6,44 @@ app = Flask(__name__,
             template_folder='.'
             )
 
-API_key = 913a3052e4518b0d4c14d67a6a54540e
+api_key = 913a3052e4518b0d4c14d67a6a54540e
 
-def get_api(lat,lon):
-    url = "https://api.openweathermap.org/data/2.5/weather?lat={" + lat + "}&lon={" + lon + "}&appid={" + API_key + "}"
-    response = requests.get(url)
+
+import requests
+
+def get_weather(city_name):
+    base_url = "http://api.openweathermap.org/data/2.5/weather"
+    params = {
+        'q': city_name,
+        'appid': api_key,
+        'units': 'metric',  # Utilisation des unités métriques (Celsius)
+        'lang': 'en'  # Langue anglaise pour les descriptions
+    }
+    response = requests.get(base_url, params=params)
+    data = response.json()
     
     if response.status_code == 200:
-        print("GET successfull code 200")
-        # note that the response content is webpage-like
-        data_string = response.content.decode('utf-8')
-        json_data = json.loads(data_string)
-        return json.dumps(json_data, indent=2)
-
+        weather = {
+            'temperature': data['main']['temp'],
+            'description': data['weather'][0]['description'],
+            'humidity': data['main']['humidity'],
+            'pressure': data['main']['pressure'],
+            'wind_speed': data['wind']['speed']
+        }
+        return weather
     else:
-        print("erreur, ", response.status_code)
+        return None
+
 
 
 @app.route('/')
 def index():
     return render_template("index.html")
 
+@app.route("/get", methods=['GET'])
+def ville():
+    selected_city = request.args.get('city')
+    data_json = get_weather(selected_city)
 
 
 
