@@ -44,6 +44,8 @@ def index():
 def ville():
     selected_city = request.args.get('city')
     data_json = get_weather(selected_city)
+    
+    return jsonify(data_json)
 
 
 
