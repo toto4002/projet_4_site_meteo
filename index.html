@@ -33,6 +33,14 @@
             <button type="button" id="cityButton">Valider</button>
         </form>
     </div>
+
+    <div id="weatherInfo">
+        <div id="temperature"><strong>Température:</strong> <span id="tempValue"></span>°C</div>
+        <div id="description"><strong>Description:</strong> <span id="descValue"></span></div>
+        <div id="humidity"><strong>Humidité:</strong> <span id="humidityValue"></span>%</div>
+        <div id="pressure"><strong>Pression:</strong> <span id="pressureValue"></span> hPa</div>
+        <div id="windSpeed"><strong>Vitesse du vent:</strong> <span id="windValue"></span> m/s</div>
+    </div>
     
     <script>
         const apiKey = 'tbu8gpUjdgyBykbeblqKfNft8j4qsyeC';
@@ -53,17 +61,21 @@
         // Utilisation
         const searchTerm = 'happy';
         searchGifs(searchTerm);
-		
-		function affichage(datas) {
-			
-		}
+        
+        function affichage(data) {
+            document.getElementById('tempValue').textContent = data[0];
+            document.getElementById('descValue').textContent = data[1];
+            document.getElementById('humidityValue').textContent = data[2];
+            document.getElementById('pressureValue').textContent = data[3];
+            document.getElementById('windValue').textContent = data[4];
+        }
         
         function get_weather(city) {
             fetch(`/get?city=${city}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-					affichage(data);
+                    affichage(data);
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
