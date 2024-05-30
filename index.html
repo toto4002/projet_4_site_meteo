@@ -53,12 +53,17 @@
         // Utilisation
         const searchTerm = 'happy';
         searchGifs(searchTerm);
+		
+		function affichage(datas) {
+			
+		}
         
         function get_weather(city) {
             fetch(`/get?city=${city}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
+					affichage(data);
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
