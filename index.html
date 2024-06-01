@@ -17,6 +17,18 @@
     <link rel="manifest" href="pwa-manifest.json">
     <link rel="stylesheet" href="css/style.css">
     <script type="text/javascript" src="js/main.js"></script>
+    <style>
+        .content {
+            display: flex;
+        }
+        #weatherInfo {
+            flex: 1;
+        }
+        #gifDisplay {
+            flex: 1;
+            margin-left: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="content">
@@ -34,26 +46,29 @@
         </form>
     </div>
 
-    <div id="weatherInfo">
-        <div id="temperature"><strong>Température:</strong> <span id="tempValue"></span>°C</div>
-        <div id="description"><strong>Description:</strong> <span id="descValue"></span></div>
-        <div id="humidity"><strong>Humidité:</strong> <span id="humidityValue"></span>%</div>
-        <div id="pressure"><strong>Pression:</strong> <span id="pressureValue"></span> hPa</div>
-        <div id="windSpeed"><strong>Vitesse du vent:</strong> <span id="windValue"></span> m/s</div>
+    <div class="content">
+        <div id="weatherInfo">
+            <div id="temperature"><strong>Température:</strong> <span id="tempValue"></span>°C</div>
+            <div id="description"><strong>Description:</strong> <span id="descValue"></span></div>
+            <div id="humidity"><strong>Humidité:</strong> <span id="humidityValue"></span>%</div>
+            <div id="pressure"><strong>Pression:</strong> <span id="pressureValue"></span> hPa</div>
+            <div id="windSpeed"><strong>Vitesse du vent:</strong> <span id="windValue"></span> m/s</div>
+        </div>
+        <div id="gifDisplay"></div>
     </div>
     
     <script>
         const apiKey = 'tbu8gpUjdgyBykbeblqKfNft8j4qsyeC';
 
-        function searchGifs(query, limit = 5) {
+        function searchGifs(query, limit = 1) { // Changed limit to 1
             const url = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${query}&limit=${limit}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    data.data.forEach(gif => {
-                        console.log(gif.url);
-                    });
+                    const gifUrl = data.data[0].images.fixed_height.url;
+                    const gifDisplay = document.getElementById('gifDisplay');
+                    gifDisplay.innerHTML = `<img src="${gifUrl}" alt="${query} gif">`;
                 })
                 .catch(error => console.error('Erreur:', error));
         }
@@ -76,6 +91,7 @@
                 .then(data => {
                     console.log(data);
                     affichage(data);
+                    searchGifs(data[1]);
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
