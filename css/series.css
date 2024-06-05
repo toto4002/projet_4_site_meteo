@@ -1,0 +1,10 @@
+h1 {
+    color: darkslategrey; // ou n'importe quelle autre couleur
+}
+
+#menu {
+    background-color: whitesmoke;
+    list-style-type: none;
+    color : blueviolet;
+    font-size: 120%;
+}
