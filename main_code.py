@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__,
             static_url_path='',
@@ -34,10 +34,6 @@ def get_weather(city_name):
     else:
         return None
 
-city = "Paris"
-w = get_weather(city)
-print(w)
-
 
 
 @app.route('/')
@@ -48,7 +44,6 @@ def index():
 def ville():
     selected_city = request.args.get('city')
     data_json = get_weather(selected_city)
-
     return jsonify(data_json)
 
 
@@ -56,4 +51,5 @@ def ville():
 
 
 # Lancement du serveur
-# app.run(debug=True, use_reloader=False, host="0.0.0.0", port=80)
+#if __name__ == '__main__':
+#    app.run(debug=True, use_reloader=False, host="0.0.0.0", port=80)
