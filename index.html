@@ -27,6 +27,12 @@
         #gifDisplay {
             flex: 1;
             margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .gifSpace {
+            flex: 1;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -54,20 +60,23 @@
             <div id="pressure"><strong>Pression:</strong> <span id="pressureValue"></span> hPa</div>
             <div id="windSpeed"><strong>Vitesse du vent:</strong> <span id="windValue"></span> m/s</div>
         </div>
-        <div id="gifDisplay"></div>
+        <div id="gifDisplay">
+            <div id="gifSpace1" class="gifSpace"></div>
+            <div id="gifSpace2" class="gifSpace"></div>
+        </div>
     </div>
     
     <script>
         const apiKey = 'tbu8gpUjdgyBykbeblqKfNft8j4qsyeC';
 
-        function searchGifs(query, limit = 1) { // Changed limit to 1
+        function searchGifs(query, space = 1, limit = 1) { // Ajout du paramètre space
             const url = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${query}&limit=${limit}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const gifUrl = data.data[0].images.fixed_height.url;
-                    const gifDisplay = document.getElementById('gifDisplay');
+                    const gifDisplay = document.getElementById(`gifSpace${space}`); // Sélection de l'espace selon le paramètre space
                     gifDisplay.innerHTML = `<img src="${gifUrl}" alt="${query} gif">`;
                 })
                 .catch(error => console.error('Erreur:', error));
@@ -75,7 +84,7 @@
 
         // Utilisation
         const searchTerm = 'weather';
-        searchGifs(searchTerm);
+        searchGifs(searchTerm, 1); // Par défaut, affiche le gif dans le premier espace
         
         function affichage(data) {
             document.getElementById('tempValue').textContent = data[0];
@@ -91,7 +100,9 @@
                 .then(data => {
                     console.log(data);
                     affichage(data);
-                    searchGifs(data[1]);
+                    searchGifs(data[1], 1); // Affiche le gif correspondant à la description météo dans le premier espace
+					searchGifs(city, 2); // Affiche le gif correspondant à la description météo dans le premier espace
+
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
