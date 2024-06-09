@@ -7,51 +7,110 @@
     <title>Météo AntoSam'use</title>
     <meta name="msapplication-TileColor" content="#af0a1a">
     <meta name="theme-color" content="#ffffff">
-    <link rel="shortcut icon" href="img/fav-16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/fav-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="img/fav-16.png">
-    <link rel="apple-touch-icon" href="img/fav-57.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="img/fav-114.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="img/fav-72.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="img/fav-144.png">
+    <link rel="shortcut icon" href="img/fav-16.jpg">
+    <link rel="icon" type="image/jpg" sizes="32x32" href="img/fav-32.jpg">
+    <link rel="icon" type="image/jpg" sizes="16x16" href="img/fav-16.jpg">
+    <link rel="apple-touch-icon" href="img/fav-57.jpg">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/fav-114.jpg">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/fav-72.jpg">
+    <link rel="apple-touch-icon" sizes="144x144" href="img/fav-144.jpg">
     <link rel="manifest" href="pwa-manifest.json">
     <link rel="stylesheet" href="css/style.css">
-    <script type="text/javascript" src="js/main.js"></script>
+    <link rel="stylesheet" href="/css/series.css">
+    <link rel="stylesheet" href="/css/picnic.css">
+    <link rel="stylesheet" href="/css/fontello.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <style>
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
         .content {
             display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
-        #weatherInfo {
+        #weatherInfo, #gifDisplay {
             flex: 1;
+            margin: 10px;
         }
-        #gifDisplay {
-            flex: 1;
-            margin-left: 20px;
-            display: flex;
-            flex-direction: column;
+		#gifDisplay {
+			display: flex;
+			justify-content: center;
+		}
+
+		.gifSpace {
+			flex: 1;
+			margin: 10px;
+		}
+
+        body {
+            text-align: center;
+            background-color: #f4f3f4;
+            font-family: 'Open Sans', sans-serif;
         }
-        .gifSpace {
-            flex: 1;
-            margin-bottom: 10px;
+        h1 {
+            text-align: center;
         }
+        #selectCity {
+            text-align: center;
+            margin: 20px;
+        }
+        #cityButton {
+            background-color: #667302;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+			margin-top: 10px;
+        }
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #install {
+            display: none;
+        }
+		
+		#installButton {
+			background-color: #667302;
+			color: white;
+			border: none;
+			padding: 10px;
+			cursor: pointer;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+
     </style>
 </head>
 <body>
-    <div class="content">
-        <button id="install" hidden>Install</button>
-        <h1>Météo AntoSam'use</h1>
-        <p>Bonjour, bonsoir ! Bienvenue sur le site AntoSam'use, référence de la météo fun en ligne !</p>
-        <p>Sélectionnez la ville dans laquelle vous souhaitez consulter la météo :</p>
+    <div id="logo">
+        <img src="/img/logo1.png" alt="Logo" width="203" height="153"> 
+		<button id="installButton" hidden>Installer</button>
     </div>
-    
-    <div>
+	
+    <div class="content">
+        <h1>Météo AntoSamu'se</h1>
+    </div>
+    <div class="content">
+	
+		<p>Bonjour, bonsoir ! Bienvenue sur le site AntoSamu'se, référence de la météo fun en ligne !<br><br>
+		Sélectionnez la ville dans laquelle vous souhaitez consulter la météo :</p>
+		
+    </div>
+    <div class="content">
         <form id="selectCity">
             <label for="city">Ville :</label>
             <input type="text" id="city" name="city"><br>
             <button type="button" id="cityButton">Valider</button>
         </form>
     </div>
-
     <div class="content">
         <div id="weatherInfo">
             <div id="temperature"><strong>Température:</strong> <span id="tempValue"></span>°C</div>
@@ -69,23 +128,22 @@
     <script>
         const apiKey = 'tbu8gpUjdgyBykbeblqKfNft8j4qsyeC';
 
-        function searchGifs(query, space = 1, limit = 1) { // Ajout du paramètre space
+        function searchGifs(query, space = 1, limit = 1) {
             const url = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${query}&limit=${limit}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const gifUrl = data.data[0].images.fixed_height.url;
-                    const gifDisplay = document.getElementById(`gifSpace${space}`); // Sélection de l'espace selon le paramètre space
+                    const gifDisplay = document.getElementById(`gifSpace${space}`);
                     gifDisplay.innerHTML = `<img src="${gifUrl}" alt="${query} gif">`;
                 })
                 .catch(error => console.error('Erreur:', error));
         }
 
-        // Utilisation
         const searchTerm = 'weather';
-        searchGifs(searchTerm, 1); // Par défaut, affiche le gif dans le premier espace
-        
+        searchGifs(searchTerm, 1);
+
         function affichage(data) {
             document.getElementById('tempValue').textContent = data[0];
             document.getElementById('descValue').textContent = data[1];
@@ -100,14 +158,12 @@
                 .then(data => {
                     console.log(data);
                     affichage(data);
-                    searchGifs(data[1], 1); // Affiche le gif correspondant à la description météo dans le premier espace
-					searchGifs(city, 2); // Affiche le gif correspondant à la description météo dans le premier espace
-
+                    searchGifs(data[1], 1);
+                    searchGifs(city, 2);
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
 
-        // Ajout d'un gestionnaire d'événement au bouton
         document.getElementById('cityButton').addEventListener('click', () => {
             const city = document.getElementById('city').value;
             get_weather(city);

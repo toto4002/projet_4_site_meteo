@@ -19,7 +19,7 @@
         {
             "src": "img/screenshot-1.jpg",
             "sizes": "1000x1029",
-            "type": "image/jpeg"
+            "type": "image/jpg"
         },
     ],
     "background_color": "#af0a1a",
